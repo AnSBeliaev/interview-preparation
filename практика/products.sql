@@ -12,3 +12,15 @@
 -- Рядом лежит второй JSON: старый текст ровно в том виде, в каком его прислали. Его можно не заполнять.
 -- Внешний номер — длинный случайный uuid. Если его не передали, база собирает его сама. Пустым он не бывает.
 -- Последнюю колонку пишите без запятой и закройте команду символами );. Когда база ответит CREATE TABLE, пришлите текст сюда.
+CREATE TABLE products (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    sku varchar(64) NOT NULL UNIQUE,
+    title text NOT NULL,
+    price numeric(12, 2) NOT NULL CHECK (price >= 0),
+    weight_kg real,
+    rating double precision CHECK (rating IS NULL OR (rating >= 0 AND rating <= 5)),
+    stock smallint NOT NULL DEFAULT 0,
+    attrs jsonb NOT NULL DEFAULT '{}'::jsonb,
+    legacy_payload json,
+    external_id uuid NOT NULL DEFAULT gen_random_uuid()
+);
